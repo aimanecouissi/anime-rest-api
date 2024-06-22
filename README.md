@@ -25,7 +25,7 @@ Welcome to the Anime REST API repository! This Spring Boot-based application is 
 
 ## DEMO
 
-Explore the API documentation in action by visiting the live demo at [Anime REST API - Swagger](http://anime-rest-api.us-east-1.elasticbeanstalk.com/swagger-ui/index.html).
+Explore the API documentation in action by visiting the live demo at [Anime REST API - Swagger UI](http://anime-rest-api.us-east-1.elasticbeanstalk.com/swagger-ui/index.html).
 
 ## INSTALLATION
 
