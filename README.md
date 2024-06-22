@@ -1,8 +1,8 @@
-# ANIME REST API 🎌
+# Anime REST APIs
 
 Welcome to the Anime REST API repository! This Spring Boot-based application is designed for managing anime and manga collections, featuring comprehensive CRUD operations and admin functionalities for anime studios. Integrated with MySQL and secured with JWT authentication, it ensures secure and efficient data management. This API is ideal for developers who want to test their applications, work with a reliable backend, and learn how to integrate it into front-end applications.
 
-## FEATURES 🌟
+## FEATURES
 
 - **CRUD Operations:** Comprehensive Create, Read, Update, and Delete functionalities for managing anime and manga collections.
 - **Admin Functionalities:** Special admin features for managing anime studios.
@@ -13,7 +13,7 @@ Welcome to the Anime REST API repository! This Spring Boot-based application is 
 - **AWS Deployment:** Deployed on AWS for scalability and reliability.
 - **Postman Collection:** Includes a Postman collection for easy API testing.
 
-## TECHNOLOGIES 💻
+## TECHNOLOGIES
 
 - **Spring Boot:** Framework for building production-ready applications.
 - **MySQL:** Relational database management system.
@@ -23,11 +23,11 @@ Welcome to the Anime REST API repository! This Spring Boot-based application is 
 - **AWS:** Cloud platform for deployment and scalability.
 - **Swagger:** API documentation and testing tool.
 
-## DEMO 📹
+## DEMO
 
 Explore the application in action by visiting the live demo at [Anime REST API](http://anime-rest-api.us-east-1.elasticbeanstalk.com/).
 
-## INSTALLATION 🛠️
+## INSTALLATION
 
 To run the application locally, follow these steps:
 
@@ -38,7 +38,7 @@ To run the application locally, follow these steps:
 5. Run the application using your IDE or by running `mvn spring-boot:run`.
 6. Access the Swagger UI to explore and test the API endpoints at `/swagger-ui/index.html`.
 
-## DOCKER DEPLOYMENT 🐳
+## DOCKER DEPLOYMENT
 
 To deploy the application with Docker Compose, follow these steps:
 
@@ -47,7 +47,7 @@ To deploy the application with Docker Compose, follow these steps:
 3. Run `docker-compose up` to start the application and its dependencies.
 4. Access the Swagger UI to explore and test the API endpoints at `http://localhost:8080/swagger-ui/index.html`.
 
-## CONTRIBUTING 🤝
+## CONTRIBUTING
 
 Contributions are welcome! If you'd like to contribute to the project, please follow these steps:
 
@@ -58,10 +58,10 @@ Contributions are welcome! If you'd like to contribute to the project, please fo
 5. Push to the branch (`git push origin feature/my-new-feature`).
 6. Create a new Pull Request.
 
-## LICENSE 📄
+## LICENSE
 
 This project is licensed under the [MIT License](LICENSE).
 
-## CONTACT 📧
+## CONTACT
 
 For any inquiries or feedback, feel free to reach out to me at [contact@aimanecouissi.com](mailto:contact@aimanecouissi.com).
