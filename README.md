@@ -1,4 +1,4 @@
-# ANIME REST API
+# MY ANIME LIST REST API
 
 The Anime REST API is a Spring Boot-based application designed for managing anime and manga collections, featuring comprehensive CRUD operations and admin functionalities for anime studios. Integrated with MySQL and secured with JWT authentication, it ensures secure and efficient data management. This API is ideal for developers who want to test their applications, work with a reliable backend, and learn how to integrate it into front-end applications. The API is easily deployable with Docker, tested with Mockito and JUnit, and includes a Postman collection for testing. It is also deployed on AWS for scalability and reliability.
 
