@@ -27,10 +27,12 @@ Welcome to the Anime REST API repository! This Spring Boot-based application is 
 
 Explore the API documentation in action by visiting the live demo at [Anime REST API - Swagger UI](http://anime-rest-api.us-east-1.elasticbeanstalk.com/swagger-ui/index.html).
 
-For connecting as admin, here are the credentials:
+### Admin Access
 
-- **Username:** aimanecouissi
-- **Password:** P@$$w0rd
+To access the admin functionalities of the API, use the following credentials:
+
+- **Username:** `aimanecouissi`
+- **Password:** `P@$$w0rd`
 
 ## INSTALLATION
 
