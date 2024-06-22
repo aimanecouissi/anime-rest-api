@@ -4,7 +4,7 @@ Welcome to the Anime REST API repository! This Spring Boot-based application is 
 
 ## FEATURES
 
-- **CRUD Operations:** Comprehensive Create, Read, Update, and Delete functionalities for managing anime and manga collections.
+- **CRUD Operations:** Comprehensive CRUD functionalities for managing anime and manga collections.
 - **Admin Functionalities:** Special admin features for managing anime studios.
 - **JWT Authentication:** Secured endpoints with JSON Web Token authentication.
 - **Swagger Documentation:** Interactive API documentation and testing with Swagger UI.
