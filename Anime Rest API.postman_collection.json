@@ -1,0 +1,5295 @@
+{
+	"info": {
+		"_postman_id": "6214faf1-76ea-4497-9afb-c19dd1199f4b",
+		"name": "Anime Rest API",
+		"description": "The Anime Rest API provides endpoints for managing user authentication, studios, anime, and manga resources.\n\nBase URL: {{base_url}}\n\n### Authentication\n\n- **Register:** Register a new user.\n    \n- **Login:** Authenticate a user and obtain a JWT token.\n    \n\n### Studios\n\n- **Create Studio:** Add a new studio.\n    \n- **Get All Studios:** Retrieve all studios.\n    \n- **Get Studio by ID:** Retrieve a specific studio by ID.\n    \n- **Update Studio:** Modify an existing studio.\n    \n- **Delete Studio:** Remove a studio.\n    \n\n### Anime\n\n- **Create Anime:** Add a new anime entry.\n    \n- **Get All Anime:** Retrieve all anime entries.\n    \n- **Get Anime by ID:** Retrieve a specific anime by ID.\n    \n- **Update Anime:** Modify an existing anime entry.\n    \n- **Delete Anime:** Remove an anime entry.\n    \n- **Get Anime by Studio ID:** Retrieve anime entries by studio ID.\n    \n- **Search Anime:** Search for anime entries by various attributes.\n    \n\n### Manga\n\n- **Create Manga:** Add a new manga entry.\n    \n- **Get All Manga:** Retrieve all manga entries.\n    \n- **Get Manga by ID:** Retrieve a specific manga by ID.\n    \n- **Update Manga:** Modify an existing manga entry.\n    \n- **Delete Manga:** Remove a manga entry.\n    \n- **Search Manga:** Search for manga entries by various attributes.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32569397"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Sign up",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Sign up - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.have.property('username');\r",
+													"    pm.expect(response).to.have.property('password');\r",
+													"});\r",
+													"\r",
+													"pm.collectionVariables.set('username', pm.response.json().username);\r",
+													"pm.collectionVariables.set('password', pm.response.json().password);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"firstName\": \"{{$randomFirstName}}\",\r\n  \"lastName\": \"{{$randomLastName}}\",\r\n  \"username\": \"{{$randomUserName}}\",\r\n  \"password\": \"{{$randomPassword}}\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/auth/register",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"auth",
+												"register"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Sign up - Duplicate Username",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 409\", function () {\r",
+													"    pm.response.to.have.status(409);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql(`'Username' with value '${pm.collectionVariables.get('admin_username')}' already exists.`);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"firstName\": \"{{$randomFirstName}}\",\r\n  \"lastName\": \"{{$randomLastName}}\",\r\n  \"username\": \"aimanecouissi\",\r\n  \"password\": \"{{$randomPassword}}\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/auth/register",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"auth",
+												"register"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Sign up - Missing Required Fields",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.be.an('object');\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"firstName\": \"{{$randomFirstName}}\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/auth/register",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"auth",
+												"register"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Sign up - Weak Password",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.be.an('object');\r",
+													"    pm.expect(response.message).to.have.property('password');\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"firstName\": \"{{$randomFirstName}}\",\r\n  \"lastName\": \"{{$randomLastName}}\",\r\n  \"username\": \"{{$randomUserName}}\",\r\n  \"password\": \"weakpassword\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/auth/register",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"auth",
+												"register"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Sign in",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Sign in - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response contains the access token', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.have.property('accessToken');\r",
+													"});\r",
+													"\r",
+													"pm.collectionVariables.set(\"access_token\", pm.response.json().accessToken);\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/auth/login",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"auth",
+												"login"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Sign in - Invalid Credentials",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Bad credentials');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"username\": \"{{$randomUserName}}\",\r\n  \"password\": \"{{$randomPassword}}\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/auth/login",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"auth",
+												"login"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Sign in - Missing Username",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.be.an('object');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"password\": \"{{password}}\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/auth/login",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"auth",
+												"login"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Sign in - Missing Password",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.be.an('object');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"username\": \"{{username}}\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/auth/login",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"auth",
+												"login"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Studios",
+			"item": [
+				{
+					"name": "Sign in as Admin",
+					"item": [
+						{
+							"name": "Sign in as Admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"pm.collectionVariables.set(\"admin_access_token\", response.accessToken);\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"{{admin_username}}\",\r\n  \"password\": \"{{admin_password}}\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create Studio",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Create Studio - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.have.property('id');\r",
+													"    pm.expect(response).to.have.property('name');\r",
+													"});\r",
+													"\r",
+													"pm.collectionVariables.set(\"studio_id\", pm.response.json().id);\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const defaultStudioName = \"Default Studio\";\r",
+													"const baseUrl = pm.collectionVariables.get(\"base_url\");\r",
+													"const authHeader = {\r",
+													"    'Content-Type': 'application/json',\r",
+													"    'Authorization': 'Bearer ' + pm.collectionVariables.get(\"admin_access_token\")\r",
+													"};\r",
+													"\r",
+													"// Function to handle GET studios request\r",
+													"function getStudios(callback) {\r",
+													"    pm.sendRequest({\r",
+													"        url: `${baseUrl}/studios`,\r",
+													"        method: 'GET',\r",
+													"        header: authHeader\r",
+													"    }, callback);\r",
+													"}\r",
+													"\r",
+													"// Function to handle POST studio request\r",
+													"function createStudio(callback) {\r",
+													"    pm.sendRequest({\r",
+													"        url: `${baseUrl}/studios`,\r",
+													"        method: 'POST',\r",
+													"        header: authHeader,\r",
+													"        body: {\r",
+													"            mode: 'raw',\r",
+													"            raw: JSON.stringify({ name: defaultStudioName })\r",
+													"        }\r",
+													"    }, callback);\r",
+													"}\r",
+													"\r",
+													"// Create or check for existing studio\r",
+													"createStudio((err, res) => {\r",
+													"    if (err) {\r",
+													"        console.error(err);\r",
+													"        return;\r",
+													"    }\r",
+													"\r",
+													"    if (res.code === 201) {\r",
+													"        const response = res.json();\r",
+													"        pm.collectionVariables.set(\"default_studio_name\", defaultStudioName);\r",
+													"        pm.collectionVariables.set(\"default_studio_id\", response.id);\r",
+													"    } else if (res.code === 409) {\r",
+													"        // Studio already exists, retrieve its ID\r",
+													"        getStudios((err, res) => {\r",
+													"            if (err) {\r",
+													"                console.error(err);\r",
+													"                return;\r",
+													"            }\r",
+													"\r",
+													"            const existingDefaultStudio = res.json().find(studio => studio.name === defaultStudioName);\r",
+													"            if (existingDefaultStudio) {\r",
+													"                pm.collectionVariables.set(\"default_studio_id\", existingDefaultStudio.id);\r",
+													"            }\r",
+													"        });\r",
+													"    } else {\r",
+													"        console.error(\"Unexpected error during studio creation\");\r",
+													"    }\r",
+													"});\r",
+													"\r",
+													"// Retrieve studios count and increment\r",
+													"getStudios((err, res) => {\r",
+													"    if (err) {\r",
+													"        console.error(err);\r",
+													"        return;\r",
+													"    }\r",
+													"    pm.collectionVariables.set(\"studios_count\", res.json().length + 1);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"Studio {{studios_count}}\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/studios",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"studios"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Create Studio - Duplicate Studio Name",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 409\", function () {\r",
+													"    pm.response.to.have.status(409);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql(`'Name' with value '${pm.collectionVariables.get('default_studio_name')}' already exists.`);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"{{default_studio_name}}\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/studios",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"studios"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Studio - Missing Name",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.be.an('object');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/studios",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"studios"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Studio - Unauthorized Access - Logged in as User",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Access Denied');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"Madhouse\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/studios",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"studios"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Studio - Unauthorized Access - Not Logged in",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"Madhouse\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/studios",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"studios"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Get All Studios",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Get All Studios - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response is an array', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.be.an('array');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/studios",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"studios"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Get All Studios - Unauthorized Access",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/studios",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"studios"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{access_token}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Get Studio by ID",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Get Studio by ID - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.have.property('id');\r",
+													"    pm.expect(response).to.have.property('name');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/studios/:studioId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"studios",
+												":studioId"
+											],
+											"variable": [
+												{
+													"key": "studioId",
+													"value": "{{studio_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Get Studio by ID - Non-existent ID",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 404\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql(`Resource 'Studio' not found with ID: '999999'.`);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/studios/999999",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"studios",
+												"999999"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Studio by ID - Unauthorized Access",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/studios/:studioId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"studios",
+												":studioId"
+											],
+											"variable": [
+												{
+													"key": "studioId",
+													"value": "{{studio_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{access_token}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Update Studio",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Update Studio - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.have.property('id');\r",
+													"    pm.expect(response.name).to.eql(`Studio ${pm.collectionVariables.get('studios_count')}`);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.set('studios_count', pm.collectionVariables.get('studios_count') + 1)"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"Studio {{studios_count}}\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/studios/:studioId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"studios",
+												":studioId"
+											],
+											"variable": [
+												{
+													"key": "studioId",
+													"value": "{{studio_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Update Studio - Non-existent ID",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 404\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql(`Resource 'Studio' not found with ID: '999999'.`);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"Madhouse Studio\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/studios/999999",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"studios",
+												"999999"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Studio - Duplicate Studio Name",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 409\", function () {\r",
+													"    pm.response.to.have.status(409);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql(`'Name' with value '${pm.collectionVariables.get('default_studio_name')}' already exists.`);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"{{default_studio_name}}\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/studios/:studioId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"studios",
+												":studioId"
+											],
+											"variable": [
+												{
+													"key": "studioId",
+													"value": "{{studio_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Studio - Unauthorized Access - Logged in as User",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Access Denied');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"Madhouse Studio\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/studios/:studioId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"studios",
+												":studioId"
+											],
+											"variable": [
+												{
+													"key": "studioId",
+													"value": "{{studio_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Studio - Unauthorized Access - Not Logged in",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"Madhouse Studio\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/studios/:studioId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"studios",
+												":studioId"
+											],
+											"variable": [
+												{
+													"key": "studioId",
+													"value": "{{studio_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Delete Studio",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Delete Studio - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response message is correct', function () {\r",
+													"    const response = pm.response.text();\r",
+													"    pm.expect(response).to.eql('The studio has been successfully deleted.');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/studios/:studioId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"studios",
+												":studioId"
+											],
+											"variable": [
+												{
+													"key": "studioId",
+													"value": "{{studio_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Delete Studio - Non-existent ID",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 404\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql(`Resource 'Studio' not found with ID: '999999'.`);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/studios/999999",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"studios",
+												"999999"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Studio - Unauthorized Access - Logged in as User",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Access Denied');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/studios/:studioId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"studios",
+												":studioId"
+											],
+											"variable": [
+												{
+													"key": "studioId",
+													"value": "{{studio_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Studio - Unauthorized Access - Not Logged in",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/studios/:studioId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"studios",
+												":studioId"
+											],
+											"variable": [
+												{
+													"key": "studioId",
+													"value": "{{studio_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{admin_access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Anime",
+			"item": [
+				{
+					"name": "Create Anime",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Create Anime - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.have.property('id');\r",
+													"    pm.expect(response).to.have.property('title');\r",
+													"    pm.expect(response).to.have.property('type');\r",
+													"    pm.expect(response).to.have.property('status');\r",
+													"    pm.expect(response).to.have.property('rating');\r",
+													"    pm.expect(response).to.have.property('favorite');\r",
+													"    pm.expect(response).to.have.property('complete');\r",
+													"    pm.expect(response).to.have.property('studioId');\r",
+													"});\r",
+													"\r",
+													"pm.collectionVariables.set(\"anime_id\", pm.response.json().id);\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const defaultAnimeTitle = \"Default Anime\";\r",
+													"const baseUrl = pm.collectionVariables.get(\"base_url\");\r",
+													"const authHeader = {\r",
+													"    'Content-Type': 'application/json',\r",
+													"    'Authorization': 'Bearer ' + pm.collectionVariables.get(\"access_token\")\r",
+													"};\r",
+													"\r",
+													"function getAnime(callback) {\r",
+													"    pm.sendRequest({\r",
+													"        url: `${baseUrl}/anime`,\r",
+													"        method: 'GET',\r",
+													"        header: authHeader\r",
+													"    }, callback);\r",
+													"}\r",
+													"\r",
+													"function createAnime(callback) {\r",
+													"    pm.sendRequest({\r",
+													"        url: `${baseUrl}/anime`,\r",
+													"        method: 'POST',\r",
+													"        header: authHeader,\r",
+													"        body: {\r",
+													"            mode: 'raw',\r",
+													"            raw: JSON.stringify({\r",
+													"                title: defaultAnimeTitle,\r",
+													"                type: pm.collectionVariables.get('random_anime_type'),\r",
+													"                status: pm.collectionVariables.get('random_anime_status'),\r",
+													"                // rating: 1,\r",
+													"                isFavorite: false,\r",
+													"                isComplete: false,\r",
+													"                studioId: pm.collectionVariables.get('default_studio_id')\r",
+													"            })\r",
+													"        }\r",
+													"    }, callback);\r",
+													"}\r",
+													"\r",
+													"createAnime((err, res) => {\r",
+													"    if (err) {\r",
+													"        console.error(err);\r",
+													"        return;\r",
+													"    }\r",
+													"\r",
+													"    if (res.code === 201) {\r",
+													"        const response = res.json();\r",
+													"        pm.collectionVariables.set(\"default_anime_title\", defaultAnimeTitle);\r",
+													"        pm.collectionVariables.set(\"default_anime_id\", response.id);\r",
+													"    } else if (res.code === 409) {\r",
+													"        getAnime((err, res) => {\r",
+													"            if (err) {\r",
+													"                console.error(err);\r",
+													"                return;\r",
+													"            }\r",
+													"            const existingDefaultAnime = res.json().items.find(anime => anime.title === defaultAnimeTitle);\r",
+													"            if (existingDefaultAnime) {\r",
+													"                pm.collectionVariables.set(\"default_anime_id\", existingDefaultAnime.id);\r",
+													"            }\r",
+													"        });\r",
+													"    } else {\r",
+													"        console.error(\"Unexpected error during anime creation\");\r",
+													"    }\r",
+													"});\r",
+													"\r",
+													"getAnime((err, res) => {\r",
+													"    if (err) {\r",
+													"        console.error(err);\r",
+													"        return;\r",
+													"    }\r",
+													"    pm.collectionVariables.set(\"anime_count\", res.json().totalElements + 1);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"Anime {{anime_count}}\",\r\n  \"type\": \"{{random_anime_type}}\",\r\n  \"status\": \"{{random_anime_status}}\",\r\n  \"rating\": {{random_rating}},\r\n  \"isFavorite\": {{$randomBoolean}},\r\n  \"isComplete\": {{$randomBoolean}},\r\n  \"studioId\": \"{{default_studio_id}}\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/anime",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Create Anime - Duplicate Anime Title",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 409\", function () {\r",
+													"    pm.response.to.have.status(409);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql(`'Title' with value '${pm.collectionVariables.get('default_anime_title')}' already exists.`);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"{{default_anime_title}}\",\r\n  \"type\": \"{{random_anime_type}}\",\r\n  \"status\": \"{{random_anime_status}}\",\r\n  \"rating\": {{random_rating}},\r\n  \"isFavorite\": {{$randomBoolean}},\r\n  \"isComplete\": {{$randomBoolean}},\r\n  \"studioId\": \"{{default_studio_id}}\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/anime",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Anime - Missing Fields",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.be.an('object');\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"New Anime\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/anime",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Anime - Unauthorized Access",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"New Anime\",\r\n  \"type\": \"TV\",\r\n  \"status\": \"WATCHING\",\r\n  \"rating\": 8,\r\n  \"isFavorite\": true,\r\n  \"isComplete\": false,\r\n  \"studioId\": \"{{studio_id}}\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/anime",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Get All Anime",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Get All Anime - Happy Path - Without Parameters",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response contains anime list', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.items).to.be.an('array');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/anime",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get All Anime - Happy Path Copy - With Parameters",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response contains anime list', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.items).to.be.an('array');\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/anime?pageNo=2&pageSize=5&sortBy=rating&sortDir=desc",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime"
+											],
+											"query": [
+												{
+													"key": "pageNo",
+													"value": "2"
+												},
+												{
+													"key": "pageSize",
+													"value": "5"
+												},
+												{
+													"key": "sortBy",
+													"value": "rating"
+												},
+												{
+													"key": "sortDir",
+													"value": "desc"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Get All Anime - Invalid Parameters",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 500\", function () {\r",
+													"    pm.response.to.have.status(500);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.contain('No property').and.to.contain('found for type');\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/anime?sortBy=name",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime"
+											],
+											"query": [
+												{
+													"key": "sortBy",
+													"value": "name"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get All Anime - Unauthorized Access",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/anime",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Get Anime by ID",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Get Anime by ID - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.have.property('id');\r",
+													"    pm.expect(response).to.have.property('title');\r",
+													"    pm.expect(response.id).to.eql(pm.collectionVariables.get(\"anime_id\"));\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/anime/:animeId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime",
+												":animeId"
+											],
+											"variable": [
+												{
+													"key": "animeId",
+													"value": "{{anime_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Get Anime by ID - Non-existent ID",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 404\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql(`Resource 'Anime' not found with ID: '999999'.`);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/anime/999999",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime",
+												"999999"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Anime by ID - Unauthorized Access",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/anime/:animeId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime",
+												":animeId"
+											],
+											"variable": [
+												{
+													"key": "animeId",
+													"value": "{{anime_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Update Anime",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Update Anime - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.have.property('id');\r",
+													"    pm.expect(response.title).to.eql(`Anime ${pm.collectionVariables.get('anime_count')}`);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.set('anime_count', pm.collectionVariables.get('anime_count') + 1)"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"Anime {{anime_count}}\",\r\n  \"type\": \"{{random_anime_type}}\",\r\n  \"status\": \"{{random_anime_status}}\",\r\n  \"rating\": {{random_rating}},\r\n  \"isFavorite\": {{$randomBoolean}},\r\n  \"isComplete\": {{$randomBoolean}},\r\n  \"studioId\": \"{{default_studio_id}}\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/anime/:animeId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime",
+												":animeId"
+											],
+											"variable": [
+												{
+													"key": "animeId",
+													"value": "{{anime_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Update Anime - Non-existent ID",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 404\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql(`Resource 'Anime' not found with ID: '999999'.`);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"Updated Anime Title\",\r\n  \"type\": \"TV\",\r\n  \"status\": \"WATCHING\",\r\n  \"rating\": 9,\r\n  \"isFavorite\": true,\r\n  \"isComplete\": false,\r\n  \"studioId\": \"{{default_studio_id}}\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/anime/999999",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime",
+												"999999"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Anime - Duplicate Anime Title",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 409\", function () {\r",
+													"    pm.response.to.have.status(409);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql(`'Title' with value '${pm.collectionVariables.get('default_anime_title')}' already exists.`);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"{{default_anime_title}}\",\r\n  \"type\": \"{{random_anime_type}}\",\r\n  \"status\": \"{{random_anime_status}}\",\r\n  \"rating\": {{random_rating}},\r\n  \"isFavorite\": {{$randomBoolean}},\r\n  \"isComplete\": {{$randomBoolean}},\r\n  \"studioId\": \"{{default_studio_id}}\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/anime/:animeId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime",
+												":animeId"
+											],
+											"variable": [
+												{
+													"key": "animeId",
+													"value": "{{anime_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Anime - Unauthorized Access",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"Updated Anime Title\",\r\n  \"type\": \"TV\",\r\n  \"status\": \"WATCHING\",\r\n  \"rating\": 9,\r\n  \"isFavorite\": true,\r\n  \"isComplete\": false,\r\n  \"studioId\": \"{{default_studio_id}}\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/anime/:animeId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime",
+												":animeId"
+											],
+											"variable": [
+												{
+													"key": "animeId",
+													"value": ""
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Delete Anime",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Delete Anime - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"    console.log(pm.response);\r",
+													"\r",
+													"pm.test('Response message is correct', function () {\r",
+													"    pm.expect(pm.response.text()).to.eql('The anime has been successfully deleted.');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/anime/:animeId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime",
+												":animeId"
+											],
+											"variable": [
+												{
+													"key": "animeId",
+													"value": "{{anime_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Delete Anime - Non-existent ID",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 404\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql(`Resource 'Anime' not found with ID: '999999'.`);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/anime/999999",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime",
+												"999999"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Anime - Unauthorized Access",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/anime/:animeId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime",
+												":animeId"
+											],
+											"variable": [
+												{
+													"key": "animeId",
+													"value": "{{anime_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Get Anime by Studio ID",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Get Anime by Studio ID - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response contains anime list', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.be.an('array');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/anime/studio/:studioId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime",
+												"studio",
+												":studioId"
+											],
+											"variable": [
+												{
+													"key": "studioId",
+													"value": "{{default_studio_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Get Anime by Studio ID - Non-existent Studio ID",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 404\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql(`Resource 'Studio' not found with ID: '999999'.`);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/anime/studio/999999",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime",
+												"studio",
+												"999999"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Anime by Studio ID - Unauthorized Access",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/anime/studio/:studioId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime",
+												"studio",
+												":studioId"
+											],
+											"variable": [
+												{
+													"key": "studioId",
+													"value": "{{default_studio_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Search Anime",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Search Anime - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response contains anime list', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.be.an('array');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/anime/search?title={{default_anime_title}}",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime",
+												"search"
+											],
+											"query": [
+												{
+													"key": "title",
+													"value": "{{default_anime_title}}"
+												},
+												{
+													"key": "type",
+													"value": "TV",
+													"disabled": true
+												},
+												{
+													"key": "status",
+													"value": "COMPLETED",
+													"disabled": true
+												},
+												{
+													"key": "rating",
+													"value": "10",
+													"disabled": true
+												},
+												{
+													"key": "isFavorite",
+													"value": "true",
+													"disabled": true
+												},
+												{
+													"key": "isComplete",
+													"value": "false",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Search Anime - Invalid Search Parameters",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.contain('Failed to convert value');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/anime/search?rating=invalid",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime",
+												"search"
+											],
+											"query": [
+												{
+													"key": "title",
+													"value": "{{default_anime_title}}",
+													"disabled": true
+												},
+												{
+													"key": "type",
+													"value": "TV",
+													"disabled": true
+												},
+												{
+													"key": "status",
+													"value": "COMPLETED",
+													"disabled": true
+												},
+												{
+													"key": "rating",
+													"value": "invalid"
+												},
+												{
+													"key": "isFavorite",
+													"value": "true",
+													"disabled": true
+												},
+												{
+													"key": "isComplete",
+													"value": "false",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Search Anime - Unauthorized Access",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/anime/search?title={{default_anime_title}}",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime",
+												"search"
+											],
+											"query": [
+												{
+													"key": "title",
+													"value": "{{default_anime_title}}"
+												},
+												{
+													"key": "type",
+													"value": "TV",
+													"disabled": true
+												},
+												{
+													"key": "status",
+													"value": "COMPLETED",
+													"disabled": true
+												},
+												{
+													"key": "rating",
+													"value": "10",
+													"disabled": true
+												},
+												{
+													"key": "isFavorite",
+													"value": "true",
+													"disabled": true
+												},
+												{
+													"key": "isComplete",
+													"value": "false",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Get Mean Rating",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Get Mean Rating - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response is a number\", function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.be.a('number');\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/anime/mean-rating",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime",
+												"mean-rating"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Get Mean Rating - Unauthorized Access",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/anime/mean-rating",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"anime",
+												"mean-rating"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Manga",
+			"item": [
+				{
+					"name": "Create Manga",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Create Manga - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.have.property('id');\r",
+													"    pm.expect(response).to.have.property('title');\r",
+													"    pm.expect(response).to.have.property('status');\r",
+													"    pm.expect(response).to.have.property('rating');\r",
+													"    pm.expect(response).to.have.property('favorite');\r",
+													"});\r",
+													"\r",
+													"const response = pm.response.json();\r",
+													"pm.collectionVariables.set(\"manga_id\", response.id);\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const defaultMangaTitle = \"Default Manga\";\r",
+													"const baseUrl = pm.collectionVariables.get(\"base_url\");\r",
+													"const authHeader = {\r",
+													"    'Content-Type': 'application/json',\r",
+													"    'Authorization': 'Bearer ' + pm.collectionVariables.get(\"access_token\")\r",
+													"};\r",
+													"\r",
+													"function getManga(callback) {\r",
+													"    pm.sendRequest({\r",
+													"        url: `${baseUrl}/manga`,\r",
+													"        method: 'GET',\r",
+													"        header: authHeader\r",
+													"    }, callback);\r",
+													"}\r",
+													"\r",
+													"function createManga(callback) {\r",
+													"    pm.sendRequest({\r",
+													"        url: `${baseUrl}/manga`,\r",
+													"        method: 'POST',\r",
+													"        header: authHeader,\r",
+													"        body: {\r",
+													"            mode: 'raw',\r",
+													"            raw: JSON.stringify({\r",
+													"                title: defaultMangaTitle,\r",
+													"                status: pm.collectionVariables.get('random_manga_status'),\r",
+													"                isFavorite: false\r",
+													"            })\r",
+													"        }\r",
+													"    }, callback);\r",
+													"}\r",
+													"\r",
+													"createManga((err, res) => {\r",
+													"    if (err) {\r",
+													"        console.error(err);\r",
+													"        return;\r",
+													"    }\r",
+													"\r",
+													"    if (res.code === 201) {\r",
+													"        const response = res.json();\r",
+													"        pm.collectionVariables.set(\"default_manga_title\", defaultMangaTitle);\r",
+													"        pm.collectionVariables.set(\"default_manga_id\", response.id);\r",
+													"    } else if (res.code === 409) {\r",
+													"        getManga((err, res) => {\r",
+													"            if (err) {\r",
+													"                console.error(err);\r",
+													"                return;\r",
+													"            }\r",
+													"            const existingDefaultManga = res.json().items.find(manga => manga.title === defaultMangaTitle);\r",
+													"            if (existingDefaultManga) {\r",
+													"                pm.collectionVariables.set(\"default_manga_id\", existingDefaultManga.id);\r",
+													"            }\r",
+													"        });\r",
+													"    } else {\r",
+													"        console.error(\"Unexpected error during manga creation\");\r",
+													"    }\r",
+													"});\r",
+													"\r",
+													"getManga((err, res) => {\r",
+													"    if (err) {\r",
+													"        console.error(err);\r",
+													"        return;\r",
+													"    }\r",
+													"    pm.collectionVariables.set(\"manga_count\", res.json().totalElements + 1);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"Manga {{manga_count}}\",\r\n  \"status\": \"{{random_manga_status}}\",\r\n  \"rating\": {{random_rating}},\r\n  \"isFavorite\": {{$randomBoolean}}\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/manga",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Create Manga - Duplicate Manga Title",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 409\", function () {\r",
+													"    pm.response.to.have.status(409);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql(`'Title' with value '${pm.collectionVariables.get('default_manga_title')}' already exists.`);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"{{default_manga_title}}\",\r\n  \"status\": \"{{random_manga_status}}\",\r\n  \"rating\": {{random_rating}},\r\n  \"isFavorite\": {{$randomBoolean}}\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/manga",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Manga - Missing Fields",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.be.an('object');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"New Manga\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/manga",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Manga - Unauthorized Access",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"New Manga\",\r\n  \"status\": \"READING\",\r\n  \"rating\": 8,\r\n  \"isFavorite\": true\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/manga",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Get All Manga",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Get All Manga- Happy Path - Without Parameters",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response contains manga list', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.items).to.be.an('array');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/manga",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get All Manga - Happy Path Copy - With Parameters",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response contains manga list', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.items).to.be.an('array');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/manga?pageNo=2&pageSize=5&sortBy=rating&sortDir=desc",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga"
+											],
+											"query": [
+												{
+													"key": "pageNo",
+													"value": "2"
+												},
+												{
+													"key": "pageSize",
+													"value": "5"
+												},
+												{
+													"key": "sortBy",
+													"value": "rating"
+												},
+												{
+													"key": "sortDir",
+													"value": "desc"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Get All Manga - Invalid Parameters",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 500\", function () {\r",
+													"    pm.response.to.have.status(500);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.contain('No property').and.to.contain('found for type');\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/manga?sortBy=name",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga"
+											],
+											"query": [
+												{
+													"key": "sortBy",
+													"value": "name"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get All Manga- Unauthorized Access",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/manga",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Get Manga by ID",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Get Manga by ID - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.have.property('id');\r",
+													"    pm.expect(response).to.have.property('title');\r",
+													"    pm.expect(response.id).to.eql(pm.collectionVariables.get(\"manga_id\"));\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/manga/:mangaId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga",
+												":mangaId"
+											],
+											"variable": [
+												{
+													"key": "mangaId",
+													"value": "{{manga_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Get Manga by ID - Non-existent ID",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 404\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql(`Resource 'Manga' not found with ID: '999999'.`);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/manga/999999",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga",
+												"999999"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Manga by ID - Unauthorized Access",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/manga/:mangaId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga",
+												":mangaId"
+											],
+											"variable": [
+												{
+													"key": "mangaId",
+													"value": "{{manga_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Update Manga",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Update Manga - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.have.property('id');\r",
+													"    pm.expect(response.title).to.eql(`Manga ${pm.collectionVariables.get('manga_count')}`);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.set('manga_count', pm.collectionVariables.get('manga_count') + 1)"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"Manga {{manga_count}}\",\r\n  \"status\": \"{{random_manga_status}}\",\r\n  \"rating\": {{random_rating}},\r\n  \"isFavorite\": {{$randomBoolean}}\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/manga/:mangaId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga",
+												":mangaId"
+											],
+											"variable": [
+												{
+													"key": "mangaId",
+													"value": "{{manga_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Update Manga - Non-existent ID",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 404\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql(`Resource 'Manga' not found with ID: '999999'.`);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"Updated Manga Title\",\r\n  \"status\": \"READING\",\r\n  \"rating\": 9,\r\n  \"isFavorite\": true\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/manga/999999",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga",
+												"999999"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Manga - Duplicate Manga Title",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 409\", function () {\r",
+													"    pm.response.to.have.status(409);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql(`'Title' with value '${pm.collectionVariables.get('default_manga_title')}' already exists.`);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"{{default_manga_title}}\",\r\n  \"status\": \"READING\",\r\n  \"rating\": 9,\r\n  \"isFavorite\": true\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/manga/:mangaId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga",
+												":mangaId"
+											],
+											"variable": [
+												{
+													"key": "mangaId",
+													"value": "{{manga_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Manga - Unauthorized Access",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"Updated Manga Title\",\r\n  \"status\": \"ONGOING\",\r\n  \"rating\": 9,\r\n  \"isFavorite\": true\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/manga/:mangaId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga",
+												":mangaId"
+											],
+											"variable": [
+												{
+													"key": "mangaId",
+													"value": "{{manga_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Delete Manga",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Delete Manga - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response message is correct', function () {\r",
+													"    const response = pm.response.text();\r",
+													"    pm.expect(response).to.eql('The manga has been successfully deleted.');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/manga/:mangaId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga",
+												":mangaId"
+											],
+											"variable": [
+												{
+													"key": "mangaId",
+													"value": "{{manga_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Delete Manga - Non-existent ID",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 404\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql(`Resource 'Manga' not found with ID: '999999'.`);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/manga/999999",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga",
+												"999999"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Manga - Unauthorized Access",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/manga/:mangaId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga",
+												":mangaId"
+											],
+											"variable": [
+												{
+													"key": "mangaId",
+													"value": "{{manga_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Search Manga",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Search Manga - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test('Response contains manga list', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.be.an('array');\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/manga/search?title={{default_manga_title}}",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga",
+												"search"
+											],
+											"query": [
+												{
+													"key": "title",
+													"value": "{{default_manga_title}}"
+												},
+												{
+													"key": "status",
+													"value": "READING",
+													"disabled": true
+												},
+												{
+													"key": "rating",
+													"value": "10",
+													"disabled": true
+												},
+												{
+													"key": "isFavorite",
+													"value": "false",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Search Manga - Invalid Search Parameters",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.contain('Failed to convert value');\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/manga/search?rating=invalid",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga",
+												"search"
+											],
+											"query": [
+												{
+													"key": "title",
+													"value": "{{default_manga_title}}",
+													"disabled": true
+												},
+												{
+													"key": "status",
+													"value": "READING",
+													"disabled": true
+												},
+												{
+													"key": "rating",
+													"value": "invalid"
+												},
+												{
+													"key": "isFavorite",
+													"value": "false",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Search Manga - Unauthorized Access",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/manga/search?title={{default_manga_title}}",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga",
+												"search"
+											],
+											"query": [
+												{
+													"key": "title",
+													"value": "{{default_manga_title}}"
+												},
+												{
+													"key": "status",
+													"value": "READING",
+													"disabled": true
+												},
+												{
+													"key": "rating",
+													"value": "10",
+													"disabled": true
+												},
+												{
+													"key": "isFavorite",
+													"value": "false",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Get Mean Rating",
+					"item": [
+						{
+							"name": "Happy Path",
+							"item": [
+								{
+									"name": "Get Mean Rating - Happy Path",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response is a number\", function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.be.a('number');\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/manga/mean-rating",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga",
+												"mean-rating"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Negative Tests",
+							"item": [
+								{
+									"name": "Get Mean Rating - Unauthorized Access",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", function () {\r",
+													"    pm.response.to.have.status(401);\r",
+													"});\r",
+													"\r",
+													"pm.test('Error message is correct', function () {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response.message).to.eql('Full authentication is required to access this resource');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/manga/mean-rating",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"manga",
+												"mean-rating"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"const types = ['TV', 'MOVIE'];\r",
+					"const animeStatuses = ['WATCHING', 'COMPLETED', 'PLAN TO WATCH'];\r",
+					"const mangaStatuses = ['READING', 'COMPLETED', 'PLAN TO READ'];\r",
+					"\r",
+					"function getRandomRating() {\r",
+					"    return Math.floor(Math.random() * 10) + 1;\r",
+					"}\r",
+					"\r",
+					"function getRandomItem(collection) {\r",
+					"    const randomIndex = Math.floor(Math.random() * collection.length);\r",
+					"    return collection[randomIndex];\r",
+					"}\r",
+					"\r",
+					"pm.collectionVariables.set('random_rating', getRandomRating());\r",
+					"pm.collectionVariables.set('random_anime_type', getRandomItem(types));\r",
+					"pm.collectionVariables.set('random_anime_status', getRandomItem(animeStatuses));\r",
+					"pm.collectionVariables.set('random_manga_status', getRandomItem(mangaStatuses));"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "admin_username",
+			"value": "aimanecouissi",
+			"type": "string"
+		},
+		{
+			"key": "admin_password",
+			"value": "P@$$w0rd",
+			"type": "string"
+		},
+		{
+			"key": "username",
+			"value": ""
+		},
+		{
+			"key": "password",
+			"value": ""
+		},
+		{
+			"key": "access_token",
+			"value": ""
+		},
+		{
+			"key": "admin_access_token",
+			"value": ""
+		},
+		{
+			"key": "studio_id",
+			"value": ""
+		},
+		{
+			"key": "default_studio_name",
+			"value": ""
+		},
+		{
+			"key": "default_studio_id",
+			"value": ""
+		},
+		{
+			"key": "studios_count",
+			"value": ""
+		},
+		{
+			"key": "random_rating",
+			"value": ""
+		},
+		{
+			"key": "random_anime_type",
+			"value": ""
+		},
+		{
+			"key": "random_anime_status",
+			"value": ""
+		},
+		{
+			"key": "default_anime_title",
+			"value": ""
+		},
+		{
+			"key": "default_anime_id",
+			"value": ""
+		},
+		{
+			"key": "anime_count",
+			"value": ""
+		},
+		{
+			"key": "anime_id",
+			"value": ""
+		},
+		{
+			"key": "random_manga_status",
+			"value": ""
+		},
+		{
+			"key": "manga_count",
+			"value": ""
+		},
+		{
+			"key": "default_manga_title",
+			"value": ""
+		},
+		{
+			"key": "default_manga_id",
+			"value": ""
+		},
+		{
+			"key": "manga_id",
+			"value": ""
+		}
+	]
+}
