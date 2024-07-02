@@ -10,7 +10,6 @@ Welcome to the Anime REST API repository! This Spring Boot-based application is 
 - **Swagger Documentation:** 📖 Interactive API documentation and testing with Swagger UI.
 - **Docker Support:** 🐳 Easily deployable with Docker Compose.
 - **Testing:** 🧪 Tested with Mockito and JUnit.
-- **AWS Deployment:** ☁️ Deployed on AWS for scalability and reliability.
 - **Postman Collection:** 📬 Includes a Postman collection for easy API testing.
 
 ## TECHNOLOGIES 💻
@@ -20,7 +19,6 @@ Welcome to the Anime REST API repository! This Spring Boot-based application is 
 - **JWT:** 🔐 Secure token-based authentication.
 - **Docker Compose:** 📦 Tool for defining and running multi-container Docker applications.
 - **Mockito & JUnit:** 🧑‍🔬 Testing frameworks.
-- **AWS:** 🌐 Cloud platform for deployment and scalability.
 - **Swagger:** 📚 API documentation and testing tool.
 
 ## DEMO 🎬
