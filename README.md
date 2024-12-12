@@ -1,4 +1,4 @@
-# ANIME AND MANGA REST API
+# ANIME AND MANGA RESTFUL API 🎌
 
 Welcome to the Anime and Manga REST API repository! This Spring Boot-based application is designed for managing anime and manga collections, featuring comprehensive CRUD operations and admin functionalities for anime studios. Integrated with MySQL and secured with JWT authentication, it ensures secure and efficient data management. This API is ideal for developers who want to test their applications, work with a reliable backend, and learn how to integrate it into front-end applications.
 
